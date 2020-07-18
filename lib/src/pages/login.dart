@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:supermarket/pages/mapa_page.dart';
+import 'package:supermarket/src/pages/mapa_page.dart';
 
 const users = const {
   'dribbble@gmail.com': '12345',
