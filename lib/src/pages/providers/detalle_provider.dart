@@ -2,9 +2,19 @@ import 'package:sqflite/sqflite.dart';
 
 import 'db_provider.dart';
 import 'package:supermarket/src/pages/models/detalle_prod_carrito_model.dart';
+export 'package:supermarket/src/pages/models/detalle_prod_carrito_model.dart';
 
 class DetalleProvider {
-  Database db = DBProvider.db.database;
+  Database db;
+
+   DetalleProvider() {
+    iniciarbd();
+  }
+
+  void iniciarbd() async {
+    db = await DBProvider.db.database;
+  }
+
 
   insert(Detalle detalle) async {
     final res = await db.insert('Detalle', detalle.toJson());

@@ -2,9 +2,19 @@ import 'package:sqflite/sqflite.dart';
 
 import 'db_provider.dart';
 import 'package:supermarket/src/pages/models/Categoria_model.dart';
+export 'package:supermarket/src/pages/models/Categoria_model.dart';
 
 class CategoriaProvider {
-  Database db = DBProvider.db.database;
+   Database db;
+
+   CategoriaProvider() {
+    iniciarbd();
+  }
+
+  void iniciarbd() async {
+    db = await DBProvider.db.database;
+  }
+
 
   insert(Categoria categoria) async {
     final res = await db.insert('Categoria', categoria.toJson());

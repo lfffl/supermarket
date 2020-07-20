@@ -1,9 +1,5 @@
 String scriptBD() {
-  return "drop database comvoz;"
-"create database comVoz;"
-"use comVoz;"
-""
-"create table carrito"
+  return "create table carrito"
 "("
 "	id int not null auto_increment,"
 "	descripcion varchar(150) not null,"

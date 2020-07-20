@@ -4,7 +4,9 @@ import 'package:supermarket/src/pages/mapa_page.dart';
 
 
 
-void main() => runApp(MyApp());
+void main() {
+runApp(MyApp());
+} 
 
 class MyApp extends StatelessWidget {
   @override
@@ -24,9 +26,12 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: 'login',
       routes: <String, WidgetBuilder>{
-        'mapa' : (BuildContext context) => Mapapage(),
+        'mapa' : (BuildContext context) => MapSample(),
         'login' : (BuildContext context) => LoginScreen(),
       },
     );
   }
+
+
+
 }

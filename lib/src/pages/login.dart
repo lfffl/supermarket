@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:location/location.dart';
 import 'package:supermarket/src/pages/mapa_page.dart';
+import 'package:supermarket/src/pages/providers/cliente_provider.dart';
 
 const users = const {
   'dribbble@gmail.com': '12345',
@@ -12,11 +14,23 @@ class LoginScreen extends StatelessWidget {
 
   Future<String> _authUser(LoginData data) {
     print('Name: ${data.name}, Password: ${data.password}');
-    return Future.delayed(loginTime).then((_) {
-      if (!users.containsKey(data.name)) {
+    return Future.delayed(loginTime).then((_) async {
+      // if (!users.containsKey(data.name)) {
+      //   return 'El usuario no existe';
+      // }
+      // if (users[data.name] != data.password) {
+      //   return 'Contrasena incorrecta';
+      // }
+      // return null;
+      // print(scriptBD());
+      final ClienteProvider cp = new ClienteProvider();
+      Cliente cli = await cp.getClienteCI(int.parse(data.name));
+      // List<Cliente> cli = await cp.getAll();
+
+      if (cli == null) {
         return 'El usuario no existe';
       }
-      if (users[data.name] != data.password) {
+      if (cli.ci.toString() != data.password) {
         return 'Contrasena incorrecta';
       }
       return null;
@@ -35,6 +49,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    getPermiso();
     return FlutterLogin(
       title: '',
       logo: 'assets/images/logo2.png',
@@ -42,10 +57,50 @@ class LoginScreen extends StatelessWidget {
       onSignup: _authUser,
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => Mapapage(),
+          builder: (context) => MapSample(),
         ));
       },
       onRecoverPassword: _recoverPassword,
+      messages: LoginMessages(
+        usernameHint: 'Usuario',
+        passwordHint: 'Contrasena',
+        loginButton: 'INGRESAR',
+        signupButton: 'REGISTRAR',
+        forgotPasswordButton: 'Olvidaste tu password?',
+      ),
+      emailValidator: (str) {
+        if (str == "") {
+          return "Debes ingresar un usuario!";
+        } else {
+          return null;
+        }
+      },
     );
+  }
+
+  void getPermiso() async {
+    Location location = new Location();
+
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    // LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    // _locationData = await location.getLocation();
   }
 }
