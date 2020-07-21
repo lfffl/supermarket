@@ -3,7 +3,6 @@ String scriptBD2() {
       "("
       "	id INTEGER PRIMARY KEY,"
       "	descripcion varchar(150) not null"
-      
       ");"
       "create table supermercado"
       "("
@@ -12,7 +11,6 @@ String scriptBD2() {
       "	longitud float not null,"
       "	latitud float not null,"
       "	descripcion varchar(150) not null"
-      
       ");"
       "create table categoria"
       "("
@@ -20,7 +18,6 @@ String scriptBD2() {
       "	nombre varchar(150) not null,"
       "	descripcion varchar(150) not null,"
       "	imagen varchar(150) not null"
-      
       ");"
       "create table cliente"
       "("
@@ -34,6 +31,18 @@ String scriptBD2() {
       "  	ON UPDATE CASCADE "
       "  	ON DELETE CASCADE"
       ");"
+
+      
+      "/*create table usuario"
+      "("
+      "	id INTEGER PRIMARY KEY,"
+      "	usuario varchar(150) not null"
+      " password varchar(150 not null)"
+      " idcliente int not null"
+      " FOREIGN KEY (idcliente) REFERENCES cliente (id) "
+      ");*/"
+
+
       "create table tipopago"
       "("
       "	id INTEGER PRIMARY KEY,"
@@ -75,7 +84,6 @@ String scriptBD2() {
       "	descripcion varchar(150) not null,"
       "	imagen varchar(150) not null,"
       "	idcategoria int not null,"
-      
       "	FOREIGN KEY (idcategoria) REFERENCES categoria (id) "
       "  	ON UPDATE CASCADE "
       "  	ON DELETE CASCADE"
@@ -87,7 +95,6 @@ String scriptBD2() {
       "    descripcion varchar(150) not null,"
       "	idproducto int not null,"
       "	idcarrito int not null,"
-      
       "	FOREIGN KEY (idproducto) REFERENCES producto (id) "
       "  	ON UPDATE CASCADE "
       "  	ON DELETE CASCADE,"
@@ -100,7 +107,6 @@ String scriptBD2() {
       "	id INTEGER PRIMARY KEY,"
       "	idproducto int not null,"
       "	idsucursal int not null,"
-      
       "	FOREIGN KEY (idproducto) REFERENCES producto (id) "
       "  	ON UPDATE CASCADE "
       "  	ON DELETE CASCADE,"
@@ -136,7 +142,15 @@ String scriptBD2() {
       "(222,'Noelia Lazarte',60826862,'Av. Brasil',2),"
       "(333,'Sergio Ramos',60826862,'Av. Beni',3),"
       "(444,'Paola Santos',60826862,'Av. Banzer',4),"
-      "(555,'Camila Diaz',60826862,'Av. Pirai',5);"
+      "(555,'Camila Diaz',60826862,'Av. Pirai',5),"
+      "(666,'Franco Antonio Penarrieta',5321862,'Radial 13',6);"
+
+      "/* insert into usuario(usuario,password,idcliente) values"
+      " ('111','111',1),"
+      " ('fff','123',6),"
+      "('222','222',1),"
+      "('333','333',3);*/"
+
       "insert into tipopago(tipo_envio,forma_pago,descripcion,idcarrito) values"
       "('costo de envio 15 bs ','pago con efectivo','mostrar Carnet',1),"
       "('costo de envio 15 bs','pago con tarjeta','mostrar Carnet',2),"
@@ -316,6 +330,5 @@ String scriptBD2() {
       "(21,16),"
       "(22,16),"
       "(23,16),"
-      "(24,16);"
-      ;
+      "(24,16);";
 }

@@ -1,17 +1,16 @@
 import 'dart:async';
 
-import 'package:location/location.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:supermarket/src/pages/models/supermercado_model.dart';
-import 'package:supermarket/src/pages/providers/supermercado_provider.dart';
+import 'package:supermarket/src/models/datos_basicos.dart';
+import 'package:supermarket/src/providers/supermercado_provider.dart';
 
-class MapSample extends StatefulWidget {
+class MapaPage extends StatefulWidget {
   @override
-  State<MapSample> createState() => MapSampleState();
+  State<MapaPage> createState() => MapaPageState();
 }
 
-class MapSampleState extends State<MapSample> {
+class MapaPageState extends State<MapaPage> {
   Completer<GoogleMapController> _controller = Completer();
   double zoom = 14.4746;
   Set<Marker> _markers = Set();
@@ -21,7 +20,7 @@ class MapSampleState extends State<MapSample> {
   @override
   void initState() {
     super.initState();
-    _iniciarLocation();
+    // _iniciarLocation();
   }
 
   static final CameraPosition _inicial = CameraPosition(
@@ -31,6 +30,7 @@ class MapSampleState extends State<MapSample> {
 
   @override
   Widget build(BuildContext context) {
+    final DatosBasicos datosbasicos = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
         title: Text("Supermercados cercanos"),
@@ -43,7 +43,7 @@ class MapSampleState extends State<MapSample> {
         onMapCreated: (GoogleMapController controller) async {
           _controller.complete(controller);
           await _getSupermercados();
-          _showmarkers(listaSuper);
+          _showmarkers(context, listaSuper, datosbasicos);
         },
       ),
       drawer: _getdrawer(),
@@ -151,7 +151,8 @@ class MapSampleState extends State<MapSample> {
     });
   }
 
-  void _showmarkers(List<Supermercado> sup) async {
+  void _showmarkers(BuildContext context, List<Supermercado> sup,
+      DatosBasicos datosbasicos) async {
     // GoogleMapController controller = await _controller.future;
 
     sup.forEach((sup) {
@@ -162,39 +163,61 @@ class MapSampleState extends State<MapSample> {
         _markers.add(Marker(
             markerId: mid,
             position: LatLng(lat, long),
-            infoWindow:
-                InfoWindow(title: sup.nombre, snippet: sup.descripcion)));
+            infoWindow: InfoWindow(
+                title: sup.nombre,
+                snippet: sup.descripcion,
+                onTap: () {
+                  _alertConfirmacion(context, sup, datosbasicos);
+                })));
       });
     });
+  }
+
+  void _alertConfirmacion(
+      BuildContext context, Supermercado sup, DatosBasicos datosbasicos) {
+    datosbasicos.supermercadoId = sup.id;
+    datosbasicos.supermercadoNombre = sup.nombre;
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Confirmar"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                RichText(
+                  text: TextSpan(children: <TextSpan>[
+                    new TextSpan(
+                        text: 'Desea seleccionar : ',
+                        style: TextStyle(color: Colors.black)),
+                    new TextSpan(
+                        text: '${sup.nombre}',
+                        style: TextStyle(color: Colors.blue, fontSize: 15.0)),
+                    new TextSpan(
+                        text: ' para realizar sus compras?',
+                        style: TextStyle(color: Colors.black))
+                  ]),
+                )
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text("Cancelar")),
+              FlatButton(
+                  onPressed: (){ 
+                    Navigator.of(context).pop();
+                    Navigator.pushNamed(context, 'compras',arguments: datosbasicos);
+                   }, 
+                  child: Text("OK")),
+            ],
+          );
+        });
   }
 
   Future<void> _getSupermercados() async {
     SupermercadoProvider ls = new SupermercadoProvider();
     listaSuper = await ls.getAll();
-  }
-
-  void _iniciarLocation() async {
-    Location location = new Location();
-
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    // _locationData = await location.getLocation();
   }
 }

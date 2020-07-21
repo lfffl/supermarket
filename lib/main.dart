@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:supermarket/src/pages/login.dart';
+
 import 'package:supermarket/src/pages/mapa_page.dart';
+import 'package:supermarket/src/pages/login.dart';
+import 'package:supermarket/src/pages/compras.dart';
+import 'package:supermarket/src/pages/carro.dart';
+import 'package:supermarket/src/pages/producto_page.dart';
 
 
 
@@ -26,8 +30,12 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: 'login',
       routes: <String, WidgetBuilder>{
-        'mapa' : (BuildContext context) => MapSample(),
+        'mapa' : (BuildContext context) => MapaPage(),
         'login' : (BuildContext context) => LoginScreen(),
+        'compras' : (BuildContext context)=>ComprasPage(),
+        'carrito' : (BuildContext context)=> CarritoPage(),
+        'producto':(BuildContext context)=> ProductoPage() 
+
       },
     );
   }

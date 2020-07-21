@@ -1,8 +1,8 @@
 import 'package:sqflite/sqflite.dart';
-
+import 'package:supermarket/src/models/cliente_model.dart';
+export 'package:supermarket/src/models/cliente_model.dart';
 import 'db_provider.dart';
-import 'package:supermarket/src/pages/models/Cliente_model.dart';
-export 'package:supermarket/src/pages/models/Cliente_model.dart';
+
 
 class ClienteProvider {
   Database db;
@@ -16,6 +16,7 @@ class ClienteProvider {
   }
 
   insert(Cliente cliente) async {
+    db = await DBProvider.db.database;
     final res = await db.insert('cliente', cliente.toJson());
     return res;
   }
@@ -41,12 +42,14 @@ class ClienteProvider {
   }
 
   updateCliente(Cliente cliente) async {
+    db = await DBProvider.db.database;
     final res = db.update('cliente', cliente.toJson(),
         where: 'id = ?', whereArgs: [cliente.id]);
     return res; // retorna el numero de id,s actualizados
   }
 
   deleteCliente(int id) async {
+    db = await DBProvider.db.database;
     final res = db.delete('cliente', where: 'id=?', whereArgs: [id]);
     return res; // retorna el numero de filas eliminadas
   }

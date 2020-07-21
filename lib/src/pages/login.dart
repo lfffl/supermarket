@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:location/location.dart';
-import 'package:supermarket/src/pages/mapa_page.dart';
-import 'package:supermarket/src/pages/providers/cliente_provider.dart';
+import 'package:supermarket/src/models/datos_basicos.dart';
+import 'package:supermarket/src/providers/cliente_provider.dart';
 
 const users = const {
   'dribbble@gmail.com': '12345',
@@ -11,6 +11,7 @@ const users = const {
 
 class LoginScreen extends StatelessWidget {
   Duration get loginTime => Duration(milliseconds: 2250);
+  final DatosBasicos datos = new DatosBasicos();
 
   Future<String> _authUser(LoginData data) {
     print('Name: ${data.name}, Password: ${data.password}');
@@ -33,6 +34,7 @@ class LoginScreen extends StatelessWidget {
       if (cli.ci.toString() != data.password) {
         return 'Contrasena incorrecta';
       }
+      datos.clienteId = cli.id;
       return null;
     });
   }
@@ -56,9 +58,7 @@ class LoginScreen extends StatelessWidget {
       onLogin: _authUser,
       onSignup: _authUser,
       onSubmitAnimationCompleted: () {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => MapSample(),
-        ));
+        Navigator.pushNamed(context, 'mapa', arguments: datos);
       },
       onRecoverPassword: _recoverPassword,
       messages: LoginMessages(

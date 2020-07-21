@@ -1,8 +1,9 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:supermarket/src/models/supermercado_model.dart';
+export 'package:supermarket/src/models/supermercado_model.dart';
 
 import 'db_provider.dart';
-import 'package:supermarket/src/pages/models/supermercado_model.dart';
-export 'package:supermarket/src/pages/models/supermercado_model.dart';
+
 
 
 class SupermercadoProvider {

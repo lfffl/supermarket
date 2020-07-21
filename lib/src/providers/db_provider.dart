@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:supermarket/src/pages/providers/bd2.dart';
+import 'package:supermarket/src/providers/bd2.dart';
 
 class DBProvider {
   static Database _database;
@@ -11,7 +11,7 @@ class DBProvider {
   DBProvider._();
 
   Future<Database> get database async {
-    print('base de datos iniciando creacion!');
+    // print('base de datos iniciando creacion!');
     if (_database != null) return _database;
     _database = await initDB();
     return _database;
@@ -25,7 +25,7 @@ class DBProvider {
       String str = scriptBD2();
       var arr = str.split(';');
       arr.forEach((element)async {
-        print('ejecutando:   $element');
+        // print('ejecutando:   $element');
         if (element != '') {
           await db.execute(element);  
         }
