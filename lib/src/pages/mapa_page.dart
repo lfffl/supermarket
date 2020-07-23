@@ -31,22 +31,36 @@ class MapaPageState extends State<MapaPage> {
   @override
   Widget build(BuildContext context) {
     final DatosBasicos datosbasicos = ModalRoute.of(context).settings.arguments;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Supermercados cercanos"),
+    return WillPopScope(
+        onWillPop: () async => showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(title: Text('Esta seguro que quiere salir?'), actions: <Widget>[
+              RaisedButton(
+                  child: Text('Salir'),
+                  onPressed: () => Navigator.of(context).pop(true)),
+              RaisedButton(
+                  child: Text('Cancelar'),
+                  onPressed: () => Navigator.of(context).pop(false)),
+            ])),
+
+          child: Scaffold(
+        appBar: AppBar(
+          title: Text("Supermercados cercanos"),
+        ),
+        body: GoogleMap(
+          markers: _markers,
+          myLocationEnabled: true,
+          mapType: MapType.normal,
+          initialCameraPosition: _inicial,
+          onMapCreated: (GoogleMapController controller) async {
+            _controller.complete(controller);
+            await _getSupermercados();
+            _showmarkers(context, listaSuper, datosbasicos);
+          },
+        ),
+        drawer: _getdrawer(),
       ),
-      body: GoogleMap(
-        markers: _markers,
-        myLocationEnabled: true,
-        mapType: MapType.normal,
-        initialCameraPosition: _inicial,
-        onMapCreated: (GoogleMapController controller) async {
-          _controller.complete(controller);
-          await _getSupermercados();
-          _showmarkers(context, listaSuper, datosbasicos);
-        },
-      ),
-      drawer: _getdrawer(),
     );
   }
 

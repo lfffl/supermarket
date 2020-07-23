@@ -33,6 +33,7 @@ dependencies:
   path_provider: ^1.6.11
   google_maps_flutter: ^0.5.28+1
   location: ^3.0.2
+  toast: ^0.1.5
 
 dev_dependencies:
   flutter_test:
@@ -51,7 +52,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/
     - assets/images/
+    - assets/categorias/
+    - assets/load/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

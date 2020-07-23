@@ -31,18 +31,6 @@ String scriptBD2() {
       "  	ON UPDATE CASCADE "
       "  	ON DELETE CASCADE"
       ");"
-
-      
-      "/*create table usuario"
-      "("
-      "	id INTEGER PRIMARY KEY,"
-      "	usuario varchar(150) not null"
-      " password varchar(150 not null)"
-      " idcliente int not null"
-      " FOREIGN KEY (idcliente) REFERENCES cliente (id) "
-      ");*/"
-
-
       "create table tipopago"
       "("
       "	id INTEGER PRIMARY KEY,"
@@ -88,6 +76,21 @@ String scriptBD2() {
       "  	ON UPDATE CASCADE "
       "  	ON DELETE CASCADE"
       ");"
+
+      "create table producto_carrito"
+      "("
+      "	id INTEGER PRIMARY KEY,"
+      " idCliente int not null,"
+      "	nombre varchar(150) not null,"
+      "	precio decimal(4,2) not null,"
+      "	descripcion varchar(150) not null,"
+      "	imagen varchar(150) not null,"
+      "	idcategoria int not null,"
+      "	FOREIGN KEY (idcategoria) REFERENCES categoria (id) "
+      "  	ON UPDATE CASCADE "
+      "  	ON DELETE CASCADE"
+      ");"
+
       "create table detalle_prod_carrito"
       "("
       "	id INTEGER PRIMARY KEY,"
@@ -126,17 +129,17 @@ String scriptBD2() {
       "('IC Norte',-17.772701, -63.203551,'Direccion: Avenida Busch, 3cer anillo interno'),"
       "('Supermercado Tia',-17.778826,-63.181744,'Direccion: Centro, Santa Cruz de la Sierra');"
       "insert into categoria(nombre,descripcion,imagen	)values"
-      "('Carnes y Embutidos.','Usted dispondrá de la mejor selección de carnes de nuestras razas autóctonas.','carne-y-embutidos5.jpg'),"
-      "('Frutas y Verduras. ',' Una cuidada y selecta variedad de frutas y verduras directamente del agricultor a tu mesa.','frutas-y-verduras-ecologicas6.jpg'),"
-      "('Panadería y Dulces.','Para todos los gustos: de trigo, centeno, integral, cereales, panecillos, chocolate con chili, con fresas.','panaderia-y-dulces4.jpg'),"
-      "('Huevos, Lácteos y Café.','Huevos ricos en antioxidantes, los mejores productos lácteos y sus derivados: queso, yogur.','huevos-lacteos-y-cafe4.jpg'),"
-      "('Aceite, Pastas. ','Aceites de altísima calidad, en aroma y sabor.','aceite-pasta-y-legumbres4.jpg'),"
-      "('Conservas y Comida Preparada.','Descubra la gran variedad, calidad y facilidad de los preparados ecológicos.','conservas-y-comidas-preparadas4.jpg'),"
-      "('Zumos y Bebidas.',' Zumos que aportan un mayor número de vitaminas naturales.','zumos-y-bebidas4.jpg'),"
-      "('Aperitivos.','Con el mejor aceite de oliva se elaboran estos productos de la mayor calidad del mercado.','aperitivos4.jpg'),"
-      "('Infantil. ','Todo 100% natural. Desde pañales de tela a la alimentación más cuidada y especial para tu bebé.','infantil4.jpg'),"
-      "('Cosmética y Cuidado Personal.','La auténtica cosmética natural, basada en el aceite de oliva virgen ecológico.','cosmetica-y-cuidado-personal4.jpg'),"
-      "('Hogar y Limpieza.','Limpieza ecológica de verdad.','hogar-y-limpieza4.jpg');"
+      "('Carnes y Embutidos','Usted dispondrá de la mejor selección de carnes de nuestras razas autóctonas.','carne-y-embutidos5.jpg'),"
+      "('Frutas y Verduras',' Una cuidada y selecta variedad de frutas y verduras directamente del agricultor a tu mesa.','frutas-y-verduras-ecologicas6.jpg'),"
+      "('Panadería y Dulces','Para todos los gustos: de trigo, centeno, integral, cereales, panecillos, chocolate con chili, con fresas.','panaderia-y-dulces4.jpg'),"
+      "('Huevos, Lácteos y Cafe','Huevos ricos en antioxidantes, los mejores productos lácteos y sus derivados: queso, yogur.','huevos-lacteos-y-cafe4.jpg'),"
+      "('Aceite, Pastas','Aceites de altísima calidad, en aroma y sabor.','aceite-pasta-y-legumbres4.jpg'),"
+      "('Conservas y Comida Preparada','Descubra la gran variedad, calidad y facilidad de los preparados ecológicos.','conservas-y-comidas-preparadas4.jpg'),"
+      "('Zumos y Bebidas',' Zumos que aportan un mayor número de vitaminas naturales.','zumos-y-bebidas4.jpg'),"
+      "('Aperitivos','Con el mejor aceite de oliva se elaboran estos productos de la mayor calidad del mercado.','aperitivos4.jpg'),"
+      "('Infantil','Todo 100% natural. Desde pañales de tela a la alimentación más cuidada y especial para tu bebé.','infantil4.jpg'),"
+      "('Cosmética y Cuidado Personal','La auténtica cosmética natural, basada en el aceite de oliva virgen ecológico.','cosmetica-y-cuidado-personal4.jpg'),"
+      "('Hogar y Limpieza','Limpieza ecológica de verdad.','hogar-y-limpieza4.jpg');"
       "insert into cliente(ci,nombre,telf,direccion,idcarrito)values"
       "(111,'Wilar ADS',60826862,'Av. Trompillo',1),"
       "(222,'Noelia Lazarte',60826862,'Av. Brasil',2),"
@@ -144,13 +147,6 @@ String scriptBD2() {
       "(444,'Paola Santos',60826862,'Av. Banzer',4),"
       "(555,'Camila Diaz',60826862,'Av. Pirai',5),"
       "(666,'Franco Antonio Penarrieta',5321862,'Radial 13',6);"
-
-      "/* insert into usuario(usuario,password,idcliente) values"
-      " ('111','111',1),"
-      " ('fff','123',6),"
-      "('222','222',1),"
-      "('333','333',3);*/"
-
       "insert into tipopago(tipo_envio,forma_pago,descripcion,idcarrito) values"
       "('costo de envio 15 bs ','pago con efectivo','mostrar Carnet',1),"
       "('costo de envio 15 bs','pago con tarjeta','mostrar Carnet',2),"
@@ -332,3 +328,22 @@ String scriptBD2() {
       "(23,16),"
       "(24,16);";
 }
+
+/*
+      "create table usuario"
+      "("
+      "	id INTEGER PRIMARY KEY,"
+      "	usuario varchar(150) not null"
+      " password varchar(150 not null)"
+      " idcliente int not null"
+      " FOREIGN KEY (idcliente) REFERENCES cliente (id) "
+      ");"
+*/
+
+/*
+     " insert into usuario(usuario,password,idcliente) values"
+      " ('111','111',1),"
+      " ('fff','123',6),"
+      "('222','222',1),"
+      "('333','333',3);"
+*/

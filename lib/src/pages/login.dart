@@ -43,7 +43,7 @@ class LoginScreen extends StatelessWidget {
     print('Name: $name');
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(name)) {
-        return 'Username not exists';
+        return 'Nombre de usuario no existe';
       }
       return null;
     });
@@ -58,15 +58,17 @@ class LoginScreen extends StatelessWidget {
       onLogin: _authUser,
       onSignup: _authUser,
       onSubmitAnimationCompleted: () {
-        Navigator.pushNamed(context, 'mapa', arguments: datos);
+        Navigator.popAndPushNamed(context, 'mapa', arguments: datos);
       },
       onRecoverPassword: _recoverPassword,
       messages: LoginMessages(
         usernameHint: 'Usuario',
         passwordHint: 'Contrasena',
+        
         loginButton: 'INGRESAR',
         signupButton: 'REGISTRAR',
         forgotPasswordButton: 'Olvidaste tu password?',
+
       ),
       emailValidator: (str) {
         if (str == "") {

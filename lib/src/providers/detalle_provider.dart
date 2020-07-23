@@ -7,8 +7,6 @@ import 'db_provider.dart';
 class DetalleProvider {
   Database db;
 
-
-
   insert(Detalle detalle) async {
     db = await DBProvider.db.database;
     final res = await db.insert('Detalle', detalle.toJson());
@@ -19,6 +17,14 @@ class DetalleProvider {
     db = await DBProvider.db.database;
     final res = await db.query('Detalle', where: 'id=?', whereArgs: [id]);
     return res.isNotEmpty ? Detalle.fromJson(res.first) : null;
+  }
+
+  Future<List<Detalle>> getDetalleIdCarrito(int id) async {
+    db = await DBProvider.db.database;
+    final res = await db.query('Detalle', where: 'idcarrito=?', whereArgs: [id]);
+    List<Detalle> list =
+        res.isNotEmpty ? res.map((e) => Detalle.fromJson(e)).toList() : null;
+    return list;
   }
 
   Future<List<Detalle>> getAll() async {

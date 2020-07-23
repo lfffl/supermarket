@@ -36,23 +36,38 @@ class _ComprasState extends State<ComprasPage> {
   Widget _cargarlista(List<Categoria> categorias) {
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
+        String imagen = categorias[index].imagen;
+        print(imagen);
         return Column(
           children: <Widget>[
-            ListTile(
-              title: Text(
-                '${categorias[index].nombre}',
-                style: TextStyle(color: Colors.blue),
+            Stack(children: <Widget>[
+              GestureDetector(
+                child: FadeInImage(
+                    height: MediaQuery.of(context).size.height * 0.20,
+                    width: MediaQuery.of(context).size.width,
+                    fit: BoxFit.fill,
+                    placeholder: AssetImage("assets/load/load.gif"),
+                    fadeOutDuration: Duration(seconds: 2),
+                    image: AssetImage('assets/categorias/$imagen')),
+                onTap: () {
+                  datosbasicos.categoriaId = categorias[index].id;
+                  Navigator.pushNamed(context, 'producto', arguments: datosbasicos);
+                },
               ),
-              subtitle: Text('${categorias[index].descripcion}'),
-              trailing: Icon(
-                Icons.arrow_forward,
-                color: Colors.deepPurpleAccent,
-              ),
-              onTap: () {
-                datosbasicos.categoriaId = categorias[index].id;
-                Navigator.pushNamed(context, 'producto', arguments: datosbasicos);
-              },
-            ),
+
+              Text(categorias[index].nombre,
+                  style: TextStyle(
+                    fontSize: 30.0,color: Colors.yellow[900],
+                    shadows: [
+                      Shadow(
+                        blurRadius: 2.0,
+                        color: Colors.black,
+                        offset: Offset(3.0, 2.0)
+                      )
+                    ]
+                  ),
+                  overflow: TextOverflow.ellipsis)
+            ]),
             Divider()
           ],
         );
@@ -60,6 +75,15 @@ class _ComprasState extends State<ComprasPage> {
       itemCount: categorias.length,
     );
   }
+
+
+
+  // Text(categorias[index].nombre,
+  //                 style: TextStyle(
+  //                   fontSize: 25.0,color: Colors.white,
+  //                   // background: Paint()..color = Colors.white,
+  //                 ),
+  //                 overflow: TextOverflow.ellipsis)
 
   Widget _cargarlista2() {
     final CategoriaProvider ct = new CategoriaProvider();
@@ -75,4 +99,20 @@ class _ComprasState extends State<ComprasPage> {
       },
     );
   }
+
+  // ListTile(
+  //   title: Text(
+  //     '${categorias[index].nombre}',
+  //     style: TextStyle(color: Colors.blue),
+  //   ),
+  //   subtitle: Text('${categorias[index].descripcion}'),
+  //   trailing: Icon(
+  //     Icons.arrow_forward,
+  //     color: Colors.deepPurpleAccent,
+  //   ),
+  //   onTap: () {
+  //     datosbasicos.categoriaId = categorias[index].id;
+  //     Navigator.pushNamed(context, 'producto', arguments: datosbasicos);
+  //   },
+  // ),
 }
