@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:supermarket/src/models/datos_basicos.dart';
 import 'package:supermarket/src/providers/supermercado_provider.dart';
+import 'package:toast/toast.dart';
 
 class MapaPage extends StatefulWidget {
   @override
@@ -15,6 +16,9 @@ class MapaPageState extends State<MapaPage> {
   double zoom = 14.4746;
   Set<Marker> _markers = Set();
   List<Supermercado> listaSuper = [];
+  DatosBasicos datosbasicos;
+  String botonTexto = "Comprar";
+  Supermercado botonSupermercado;
   // LocationData _locationData;
 
   @override
@@ -30,21 +34,21 @@ class MapaPageState extends State<MapaPage> {
 
   @override
   Widget build(BuildContext context) {
-    final DatosBasicos datosbasicos = ModalRoute.of(context).settings.arguments;
+    datosbasicos = ModalRoute.of(context).settings.arguments;
     return WillPopScope(
-        onWillPop: () async => showDialog(
-        context: context,
-        builder: (context) =>
-            AlertDialog(title: Text('Esta seguro que quiere salir?'), actions: <Widget>[
-              RaisedButton(
-                  child: Text('Salir'),
-                  onPressed: () => Navigator.of(context).pop(true)),
-              RaisedButton(
-                  child: Text('Cancelar'),
-                  onPressed: () => Navigator.of(context).pop(false)),
-            ])),
-
-          child: Scaffold(
+      onWillPop: () async => showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                  title: Text('Esta seguro que quiere salir?'),
+                  actions: <Widget>[
+                    RaisedButton(
+                        child: Text('Salir'),
+                        onPressed: () => Navigator.of(context).pop(true)),
+                    RaisedButton(
+                        child: Text('Cancelar'),
+                        onPressed: () => Navigator.of(context).pop(false)),
+                  ])),
+      child: Scaffold(
         appBar: AppBar(
           title: Text("Supermercados cercanos"),
         ),
@@ -59,12 +63,28 @@ class MapaPageState extends State<MapaPage> {
             _showmarkers(context, listaSuper, datosbasicos);
           },
         ),
-        drawer: _getdrawer(),
+        floatingActionButton: Container(
+          alignment: Alignment.bottomLeft,
+          padding: EdgeInsets.only(left: 20.0),
+          child: FloatingActionButton.extended(
+            onPressed: () {
+              if (botonTexto != "Comprar") {
+                _alertConfirmacion(context, botonSupermercado, datosbasicos);
+              } else {
+                Toast.show("Selecciona un supermercado!", context,
+                    duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+              }
+            },
+            label: Text(botonTexto),
+            icon: Icon(Icons.store),
+          ),
+        ),
+        drawer: _getdrawer(context),
       ),
     );
   }
 
-  Widget _getdrawer() {
+  Widget _getdrawer(BuildContext context) {
     if (listaSuper.isEmpty) {
       SupermercadoProvider ls = new SupermercadoProvider();
 
@@ -75,17 +95,17 @@ class MapaPageState extends State<MapaPage> {
             if (snapshot.hasData) {
               listaSuper = snapshot.data;
               // _showmarkers(snapshot.data);
-              return _crearDrawer(snapshot.data);
+              return _crearDrawer(snapshot.data, context);
             } else {
               return CircularProgressIndicator();
             }
           });
     } else {
-      return _crearDrawer(listaSuper);
+      return _crearDrawer(listaSuper, context);
     }
   }
 
-  Widget _crearDrawer(List<Supermercado> ls) {
+  Widget _crearDrawer(List<Supermercado> ls, BuildContext context) {
     return Drawer(
       child: ListView.builder(
         itemCount: ls == null ? 1 : ls.length + 1,
@@ -113,8 +133,11 @@ class MapaPageState extends State<MapaPage> {
                 ),
                 subtitle: Text(ls[index].descripcion),
                 onTap: () {
+                  setState(() {
+                    botonSupermercado = ls[index];
+                    botonTexto = ls[index].nombre;
+                  });
                   _goSuper(ls[index]);
-
                   Navigator.of(context).pop();
                 },
               ),
@@ -156,11 +179,12 @@ class MapaPageState extends State<MapaPage> {
     //       position: LatLng(lat, long),
     //       infoWindow: InfoWindow(title: sup.nombre, snippet: sup.descripcion)));
     // });
+
     GoogleMapController controller = await _controller.future;
     controller
         .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, long), zoom))
         .then((_) async {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(seconds: 2));
       controller.showMarkerInfoWindow(mid);
     });
   }
@@ -175,6 +199,12 @@ class MapaPageState extends State<MapaPage> {
       MarkerId mid = MarkerId(sup.id.toString());
       setState(() {
         _markers.add(Marker(
+            onTap: () {
+              setState(() {
+                    botonSupermercado = sup;
+                    botonTexto = sup.nombre;
+                  });
+            },
             markerId: mid,
             position: LatLng(lat, long),
             infoWindow: InfoWindow(
@@ -220,10 +250,11 @@ class MapaPageState extends State<MapaPage> {
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text("Cancelar")),
               FlatButton(
-                  onPressed: (){ 
+                  onPressed: () {
                     Navigator.of(context).pop();
-                    Navigator.pushNamed(context, 'compras',arguments: datosbasicos);
-                   }, 
+                    Navigator.pushNamed(context, 'catergorias',
+                        arguments: datosbasicos);
+                  },
                   child: Text("OK")),
             ],
           );

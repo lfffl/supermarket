@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:supermarket/src/pages/mapa_page.dart';
 import 'package:supermarket/src/pages/login.dart';
-import 'package:supermarket/src/pages/compras.dart';
+import 'package:supermarket/src/pages/categorias.dart';
 import 'package:supermarket/src/pages/carro.dart';
-import 'package:supermarket/src/pages/producto_page.dart';
+import 'package:supermarket/src/pages/lista_productos_page.dart';
 
 
 
@@ -32,9 +32,9 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         'mapa' : (BuildContext context) => MapaPage(),
         'login' : (BuildContext context) => LoginScreen(),
-        'compras' : (BuildContext context)=>ComprasPage(),
+        'catergorias' : (BuildContext context)=>CategoriasPage(),
         'carrito' : (BuildContext context)=> CarritoPage(),
-        'producto':(BuildContext context)=> ProductoPage() 
+        'listaproductos':(BuildContext context)=> ListaProductosPage() 
 
       },
     );

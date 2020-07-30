@@ -56,6 +56,15 @@ flutter:
     - assets/images/
     - assets/categorias/
     - assets/load/
+    # - assets/productos/
+    - assets/productos/Aceite,_Pastas/
+    - assets/productos/Carnes_y_Embutidos/
+    - assets/productos/Conservas_y_Comida_Preparada/
+    - assets/productos/Frutas_y_Verduras/
+    - assets/productos/Huevos,_Lácteos_y_Cafe/
+    - assets/productos/Panadería_y_Dulces/
+
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

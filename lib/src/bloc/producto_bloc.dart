@@ -8,9 +8,11 @@ class ProductoBloc {
 
   setCarrito(int idcliente) {
     _singleton.cliente = idcliente;
+    obtenerProductosCarrito();
   }
 
   factory ProductoBloc() {
+    // _singleton.cliente = idcliente;
     return _singleton;
   }
 

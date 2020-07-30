@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:supermarket/src/models/datos_basicos.dart';
 import 'package:supermarket/src/providers/categoria_provider.dart';
 
-class ComprasPage extends StatefulWidget {
+class CategoriasPage extends StatefulWidget {
   @override
   _ComprasState createState() => _ComprasState();
 }
 
-class _ComprasState extends State<ComprasPage> {
-  @override
+class _ComprasState extends State<CategoriasPage> {
   DatosBasicos datosbasicos;
+  @override
   Widget build(BuildContext context) {
     datosbasicos = ModalRoute.of(context).settings.arguments;
     return Scaffold(
@@ -37,7 +37,7 @@ class _ComprasState extends State<ComprasPage> {
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
         String imagen = categorias[index].imagen;
-        print(imagen);
+        // print(imagen);
         return Column(
           children: <Widget>[
             Stack(children: <Widget>[
@@ -51,21 +51,21 @@ class _ComprasState extends State<ComprasPage> {
                     image: AssetImage('assets/categorias/$imagen')),
                 onTap: () {
                   datosbasicos.categoriaId = categorias[index].id;
-                  Navigator.pushNamed(context, 'producto', arguments: datosbasicos);
+                  datosbasicos.nombrecategoria = categorias[index].nombre;
+                  Navigator.pushNamed(context, 'listaproductos',
+                      arguments: datosbasicos);
                 },
               ),
-
               Text(categorias[index].nombre,
                   style: TextStyle(
-                    fontSize: 30.0,color: Colors.yellow[900],
-                    shadows: [
-                      Shadow(
-                        blurRadius: 2.0,
-                        color: Colors.black,
-                        offset: Offset(3.0, 2.0)
-                      )
-                    ]
-                  ),
+                      fontSize: 30.0,
+                      color: Colors.yellow[900],
+                      shadows: [
+                        Shadow(
+                            blurRadius: 2.0,
+                            color: Colors.black,
+                            offset: Offset(3.0, 2.0))
+                      ]),
                   overflow: TextOverflow.ellipsis)
             ]),
             Divider()
@@ -75,8 +75,6 @@ class _ComprasState extends State<ComprasPage> {
       itemCount: categorias.length,
     );
   }
-
-
 
   // Text(categorias[index].nombre,
   //                 style: TextStyle(
@@ -112,7 +110,7 @@ class _ComprasState extends State<ComprasPage> {
   //   ),
   //   onTap: () {
   //     datosbasicos.categoriaId = categorias[index].id;
-  //     Navigator.pushNamed(context, 'producto', arguments: datosbasicos);
+  //     Navigator.pushNamed(context, 'listaproductos', arguments: datosbasicos);
   //   },
   // ),
 }

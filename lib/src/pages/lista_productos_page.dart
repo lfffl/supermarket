@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:supermarket/src/bloc/producto_bloc.dart';
 import 'package:supermarket/src/models/datos_basicos.dart';
@@ -7,15 +5,22 @@ import 'package:supermarket/src/providers/productoCarrito_provider.dart';
 import 'package:supermarket/src/providers/producto_provider.dart';
 import 'package:toast/toast.dart';
 
-class ProductoPage extends StatefulWidget {
+class ListaProductosPage extends StatefulWidget {
   @override
-  _ProductoPageState createState() => _ProductoPageState();
+  _ListaProductosPageState createState() => _ListaProductosPageState();
 }
 
-class _ProductoPageState extends State<ProductoPage> {
-  @override
+class _ListaProductosPageState extends State<ListaProductosPage> {
   DatosBasicos datosbasicos;
   ProductoBloc pbloc = new ProductoBloc();
+  // List<Categoria> categorias;
+  @override
+  void initState() {
+    super.initState();
+    //  _getcategoriasall();
+  }
+
+  @override
   Widget build(BuildContext context) {
     datosbasicos = ModalRoute.of(context).settings.arguments;
     pbloc.setCarrito(datosbasicos.clienteId);
@@ -41,8 +46,13 @@ class _ProductoPageState extends State<ProductoPage> {
   }
 
   Widget _cargarlista(List<Producto> productos) {
+    // print(categorias);
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
+        String carp = _quitarSpacios(datosbasicos.nombrecategoria);
+        print(carp);
+        String dirImage = 'assets/productos/$carp/${productos[index].imagen}';
+        print(dirImage);
         return Column(
           children: <Widget>[
             ListTile(
@@ -70,8 +80,11 @@ class _ProductoPageState extends State<ProductoPage> {
                   ])),
               isThreeLine: true,
               leading: FadeInImage(
+                  width: MediaQuery.of(context).size.width*0.2,
+                  height: MediaQuery.of(context).size.height*0.15,
+                  fit: BoxFit.fill,
                   placeholder: AssetImage('assets/images/noimage.png'),
-                  image: AssetImage('assets/images/noimage.png')),
+                  image: AssetImage(dirImage)),
               trailing: IconButton(
                 icon: Icon(
                   Icons.add_shopping_cart,
@@ -100,7 +113,10 @@ class _ProductoPageState extends State<ProductoPage> {
         if (snapshot.hasData) {
           return _cargarlista(snapshot.data);
         } else {
-          return Center(child: CircularProgressIndicator());
+          // return Center(child: CircularProgressIndicator());
+          return Center(
+            child: Text('No tenemos productos en esta categoria aún :('),
+          );
         }
       },
     );
@@ -119,5 +135,16 @@ class _ProductoPageState extends State<ProductoPage> {
     pbloc.agregarProductosCarrito(pc);
     Toast.show('${producto.nombre} agregado a tu carrito', context,
         duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+  }
+
+  // Future<List<Categoria>> _getcategoriasall() async {
+  //   List<Categoria> cate;
+  //   CategoriaProvider cp = new CategoriaProvider();
+  //   categorias = await cp.getAll();
+  //   return cate;
+  // }
+
+  String _quitarSpacios(String nomb) {
+    return nomb.replaceAll(new RegExp(r' '), '_');
   }
 }
