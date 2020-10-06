@@ -3,8 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:supermarket/src/models/datos_basicos.dart';
+import 'package:supermarket/src/pages/menu_principal.dart';
 import 'package:supermarket/src/providers/supermercado_provider.dart';
+import 'package:supermarket/src/utils/calculos_mapas.dart';
 import 'package:toast/toast.dart';
+import 'package:location/location.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class MapaPage extends StatefulWidget {
   @override
@@ -19,11 +23,20 @@ class MapaPageState extends State<MapaPage> {
   DatosBasicos datosbasicos;
   String botonTexto = "Comprar";
   Supermercado botonSupermercado;
+  Location location = new Location();
+  LocationData _locationData;
+  final Set<Polyline> _polyline = {};
+  String _mapStyle;
+  GoogleMapController mapController;
+
   // LocationData _locationData;
 
   @override
   void initState() {
     super.initState();
+    rootBundle.loadString('assets/varios/map_style.txt').then((string) {
+      _mapStyle = string;
+    });
     // _iniciarLocation();
   }
 
@@ -54,10 +67,13 @@ class MapaPageState extends State<MapaPage> {
         ),
         body: GoogleMap(
           markers: _markers,
+          polylines: _polyline,
           myLocationEnabled: true,
           mapType: MapType.normal,
           initialCameraPosition: _inicial,
           onMapCreated: (GoogleMapController controller) async {
+            mapController = controller;
+            mapController.setMapStyle(_mapStyle);
             _controller.complete(controller);
             await _getSupermercados();
             _showmarkers(context, listaSuper, datosbasicos);
@@ -79,7 +95,8 @@ class MapaPageState extends State<MapaPage> {
             icon: Icon(Icons.store),
           ),
         ),
-        drawer: _getdrawer(context),
+        //drawer: _getdrawer(context),
+        drawer: MenuP(),
       ),
     );
   }
@@ -201,9 +218,9 @@ class MapaPageState extends State<MapaPage> {
         _markers.add(Marker(
             onTap: () {
               setState(() {
-                    botonSupermercado = sup;
-                    botonTexto = sup.nombre;
-                  });
+                botonSupermercado = sup;
+                botonTexto = sup.nombre;
+              });
             },
             markerId: mid,
             position: LatLng(lat, long),
@@ -264,5 +281,51 @@ class MapaPageState extends State<MapaPage> {
   Future<void> _getSupermercados() async {
     SupermercadoProvider ls = new SupermercadoProvider();
     listaSuper = await ls.getAll();
+    _locationData = await location.getLocation();
+
+    GoogleMapController controller = await _controller.future;
+    controller
+        .animateCamera(CameraUpdate.newLatLngZoom(
+            LatLng(_locationData.latitude, _locationData.longitude), zoom))
+        .then((_) async {
+      await Future.delayed(Duration(seconds: 2));
+      dibujar_linea_mas_cercano();
+    });
+  }
+
+  void dibujar_linea_mas_cercano() {
+    LatLng coor2 = LatLng(_locationData.latitude, _locationData.longitude);
+    LatLng coorBest;
+    List<LatLng> listlatlong = List();
+    Supermercado sup;
+
+    double men = double.maxFinite;
+    listaSuper.forEach((element) {
+      LatLng coor1 = LatLng(element.longitud, element.latitud);
+
+      double calc = calcular_distancia_entre_ubicaciones(coor1, coor2);
+      if (calc < men) {
+        men = calc;
+        coorBest = coor1;
+        sup = element;
+        setState(() {
+          botonSupermercado = element;
+          botonTexto = element.nombre;
+        });
+      }
+    });
+    listlatlong.add(coorBest);
+    listlatlong.add(coor2);
+
+    _polyline.add(Polyline(
+      polylineId: PolylineId(1.toString()),
+      visible: true,
+      //latlng is List<LatLng>
+      points: listlatlong,
+      color: Colors.green,
+    ));
+
+    Toast.show('El supermercado mas cercano es: ${sup.nombre}', context,
+        duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
   }
 }

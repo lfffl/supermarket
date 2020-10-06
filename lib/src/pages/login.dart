@@ -4,6 +4,7 @@ import 'package:location/location.dart';
 import 'package:supermarket/src/models/datos_basicos.dart';
 import 'package:supermarket/src/providers/cliente_provider.dart';
 
+
 const users = const {
   'dribbble@gmail.com': '12345',
   'hunter@gmail.com': 'hunter',
@@ -102,6 +103,7 @@ class LoginScreen extends StatelessWidget {
         return;
       }
     }
+
 
     // _locationData = await location.getLocation();
   }

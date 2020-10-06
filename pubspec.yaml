@@ -34,6 +34,9 @@ dependencies:
   google_maps_flutter: ^0.5.28+1
   location: ^3.0.2
   toast: ^0.1.5
+  speech_recognition: "^0.3.0"
+  diacritic: ^0.1.1
+  easy_permission_validator: ^2.0.1
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +66,7 @@ flutter:
     - assets/productos/Frutas_y_Verduras/
     - assets/productos/Huevos,_Lácteos_y_Cafe/
     - assets/productos/Panadería_y_Dulces/
+    - assets/varios/
 
 
   #   - images/a_dot_ham.jpeg

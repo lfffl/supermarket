@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:supermarket/src/models/datos_basicos.dart';
+import 'package:supermarket/src/pages/menu_principal.dart';
 import 'package:supermarket/src/providers/categoria_provider.dart';
+import 'package:supermarket/src/utils/SearchDelegate.dart';
+import 'package:speech_recognition/speech_recognition.dart';
+import 'package:diacritic/diacritic.dart';
+import 'package:easy_permission_validator/easy_permission_validator.dart';
 
 class CategoriasPage extends StatefulWidget {
   @override
@@ -8,20 +13,88 @@ class CategoriasPage extends StatefulWidget {
 }
 
 class _ComprasState extends State<CategoriasPage> {
+  bool permisoMicrofono = false;
+  DataSearch ds = new DataSearch();
+  SpeechRecognition _speechRecognition;
+  bool _isAvailable = false;
+  bool _isListening = false;
+
+  String resultText = "";
+
+  @override
+  void initState() {
+    super.initState();
+    initSpeechRecognizer();
+  }
+
   DatosBasicos datosbasicos;
+  MenuP p = new MenuP();
   @override
   Widget build(BuildContext context) {
     datosbasicos = ModalRoute.of(context).settings.arguments;
+    p.setDatosbasicos(datosbasicos);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurpleAccent,
-        title: Text(datosbasicos.supermercadoNombre),
+        //title: Text(datosbasicos.supermercadoNombre),
         centerTitle: true,
         actions: <Widget>[
+          Center(child: Text(resultText)),
           IconButton(
-            icon: Icon(Icons.shopping_cart),
+            icon: Icon(Icons.mic),
             onPressed: () {
-              Navigator.pushNamed(context, 'carrito', arguments: datosbasicos);
+              if (!permisoMicrofono) {
+                _permissionRequest();
+              }
+              //Navigator.pushNamed(context, 'carrito', arguments: datosbasicos);
+              //showSearch(context: context, delegate: DataSearch());
+              if (permisoMicrofono) {
+                if (_isAvailable && !_isListening) {
+                  _isListening = true;
+                  resultText = "Escuchando...";
+                  _speechRecognition.listen(locale: "en_US").then((result) {
+                    ds.setDatosbasicos(datosbasicos);
+
+                    showSearch(
+                        context: context,
+                        delegate: ds,
+                        query: removeDiacritics(result).toLowerCase());
+                    resultText = "";
+                  });
+                }
+                /*
+                if (_isListening) {
+                  _isListening = false;
+                  _speechRecognition.stop().then((result) {
+                    _isListening = false;
+                    ds.setDatosbasicos(datosbasicos);
+
+                    showSearch(
+                        context: context,
+                        delegate: ds,
+                        query: removeDiacritics(result).toLowerCase());
+                  });
+                  resultText = "";
+                }
+                */
+              }
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              if (_isListening) {
+                _speechRecognition.stop().then((result) {
+                  print("entro al stop");
+                });
+              }
+              ds.setDatosbasicos(datosbasicos);
+
+              showSearch(
+                  context: context,
+                  delegate: ds,
+                  query: removeDiacritics(resultText).toLowerCase());
+              resultText = "";
             },
           ),
           SizedBox(
@@ -30,6 +103,7 @@ class _ComprasState extends State<CategoriasPage> {
         ],
       ),
       body: _cargarlista2(),
+      drawer: p,
     );
   }
 
@@ -113,4 +187,39 @@ class _ComprasState extends State<CategoriasPage> {
   //     Navigator.pushNamed(context, 'listaproductos', arguments: datosbasicos);
   //   },
   // ),
+
+  void initSpeechRecognizer() {
+    _speechRecognition = SpeechRecognition();
+
+    _speechRecognition.setAvailabilityHandler(
+      (bool result) => setState(() => _isAvailable = result),
+    );
+
+    _speechRecognition.setRecognitionStartedHandler(
+      () => setState(() => _isListening = true),
+    );
+
+    _speechRecognition.setRecognitionResultHandler(
+      (String speech) => setState(() => resultText = speech),
+    );
+
+    _speechRecognition.setRecognitionCompleteHandler(
+      () => setState(() => _isListening = false),
+    );
+
+    _speechRecognition.activate().then(
+          (result) => setState(() => _isAvailable = result),
+        );
+  }
+
+  _permissionRequest() async {
+    final permissionValidator = EasyPermissionValidator(
+      context: context,
+      appName: 'Easy Permission Validator',
+    );
+    var result = await permissionValidator.microphone();
+    if (result) {
+      permisoMicrofono = true;
+    }
+  }
 }
