@@ -19,9 +19,10 @@ class MenuP extends StatelessWidget {
           ),
           new ListTile(
               leading: Icon(Icons.format_list_numbered),
-              title: new Text("Lista de compras"),
+              title: new Text("Historial de compras"),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.pushNamed(context, 'HistorialCompras', arguments: datosBasicos);
               }),
           new ListTile(
               leading: Icon(Icons.shopping_cart),

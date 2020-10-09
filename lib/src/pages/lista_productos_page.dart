@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:supermarket/src/bloc/producto_bloc.dart';
 import 'package:supermarket/src/models/datos_basicos.dart';
 import 'package:supermarket/src/providers/productoCarrito_provider.dart';
@@ -50,9 +51,9 @@ class _ListaProductosPageState extends State<ListaProductosPage> {
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
         String carp = _quitarSpacios(datosbasicos.nombrecategoria);
-        print(carp);
+        //print(carp);
         String dirImage = 'assets/productos/$carp/${productos[index].imagen}';
-        print(dirImage);
+        //print(dirImage);
         return Column(
           children: <Widget>[
             ListTile(
@@ -80,8 +81,8 @@ class _ListaProductosPageState extends State<ListaProductosPage> {
                   ])),
               isThreeLine: true,
               leading: FadeInImage(
-                  width: MediaQuery.of(context).size.width*0.2,
-                  height: MediaQuery.of(context).size.height*0.15,
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  height: MediaQuery.of(context).size.height * 0.15,
                   fit: BoxFit.fill,
                   placeholder: AssetImage('assets/images/noimage.png'),
                   image: AssetImage(dirImage)),
@@ -124,6 +125,7 @@ class _ListaProductosPageState extends State<ListaProductosPage> {
 
   _insertarProductoCarritoBloc(int cliente, Producto producto) {
     ProductoCarrito pc = new ProductoCarrito();
+    String date = DateFormat("yyyy-MM-dd H:mm:ss").format(DateTime.now());
     pc.idcliente = cliente;
     pc.id = null;
     pc.nombre = producto.nombre;
@@ -131,6 +133,8 @@ class _ListaProductosPageState extends State<ListaProductosPage> {
     pc.descripcion = producto.descripcion;
     pc.imagen = producto.imagen;
     pc.idcategoria = producto.idcategoria;
+    pc.estado = 0;
+    pc.fecha = date;
 
     pbloc.agregarProductosCarrito(pc);
     Toast.show('${producto.nombre} agregado a tu carrito', context,

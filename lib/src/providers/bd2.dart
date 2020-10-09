@@ -86,6 +86,8 @@ String scriptBD2() {
       "	descripcion varchar(150) not null,"
       "	imagen varchar(150) not null,"
       "	idcategoria int not null,"
+      " estado int DEFAULT 0,"
+      " fecha varchar(100),"
       "	FOREIGN KEY (idcategoria) REFERENCES categoria (id) "
       "  	ON UPDATE CASCADE "
       "  	ON DELETE CASCADE"

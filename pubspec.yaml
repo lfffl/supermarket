@@ -37,6 +37,7 @@ dependencies:
   speech_recognition: "^0.3.0"
   diacritic: ^0.1.1
   easy_permission_validator: ^2.0.1
+  intl: ^0.16.1
 
 dev_dependencies:
   flutter_test:

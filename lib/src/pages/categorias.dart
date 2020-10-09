@@ -85,7 +85,7 @@ class _ComprasState extends State<CategoriasPage> {
             onPressed: () {
               if (_isListening) {
                 _speechRecognition.stop().then((result) {
-                  print("entro al stop");
+                  //print("entro al stop");
                 });
               }
               ds.setDatosbasicos(datosbasicos);

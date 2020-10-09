@@ -4,10 +4,12 @@ import 'package:supermarket/src/providers/productoCarrito_provider.dart';
 
 class ProductoBloc {
   int cliente;
+  int estado;
   static final ProductoBloc _singleton = new ProductoBloc._internal();
 
   setCarrito(int idcliente) {
     _singleton.cliente = idcliente;
+    //_singleton.estado = estado;
     obtenerProductosCarrito();
   }
 
@@ -54,4 +56,11 @@ class ProductoBloc {
     await pc.deleteAll();
     obtenerProductosCarrito();
   }
+
+  updateProductoCarrito(ProductoCarrito prod) async {
+    ProductoCarritoProvider pc = ProductoCarritoProvider();
+    await pc.updateProductoCarrito(prod);
+    obtenerProductosCarrito();
+  }
+
 }

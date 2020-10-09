@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_recognition/speech_recognition.dart';
@@ -68,7 +69,8 @@ class DataSearch extends SearchDelegate {
   Widget _cargarlista(List<Producto> productos, BuildContext context) {
     // print(categorias);
 
-    productos.removeWhere((element) => !element.nombre.toLowerCase().contains(query.toLowerCase()));
+    productos.removeWhere((element) =>
+        !element.nombre.toLowerCase().contains(query.toLowerCase()));
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
         //String carp = _quitarSpacios(datosBasicos.nombrecategoria);
@@ -136,6 +138,7 @@ class DataSearch extends SearchDelegate {
   _insertarProductoCarritoBloc(
       int cliente, Producto producto, BuildContext context) {
     ProductoCarrito pc = new ProductoCarrito();
+    String date = DateFormat("yyyy-MM-dd H:mm:ss").format(DateTime.now());
     pc.idcliente = cliente;
     pc.id = null;
     pc.nombre = producto.nombre;
@@ -143,6 +146,8 @@ class DataSearch extends SearchDelegate {
     pc.descripcion = producto.descripcion;
     pc.imagen = producto.imagen;
     pc.idcategoria = producto.idcategoria;
+    pc.estado = 0;
+    pc.fecha = date;
 
     pbloc.agregarProductosCarrito(pc);
 
