@@ -71,7 +71,7 @@ class _HistorialComprasState extends State<HistorialCompras> {
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.black)),
                 TextSpan(
-                    text: '${fac[index].total} Bs',
+                    text: '${fac[index].total.toStringAsFixed(2)} Bs',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.red,
