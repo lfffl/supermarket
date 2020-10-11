@@ -91,10 +91,11 @@ class _ComprasState extends State<CarritoPage> {
                         Navigator.of(context).pop(true);
                         _realizarPago();
                       }),
-                  RaisedButton(
+                  /*RaisedButton(
                       child: Text('Efectivo'),
                       color: Colors.green,
                       onPressed: () => Navigator.of(context).pop(true)),
+                      */
                   RaisedButton(
                       child: Text('Cancelar'),
                       color: Colors.red,
