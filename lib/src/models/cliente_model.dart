@@ -21,6 +21,8 @@ class Cliente {
         this.telf,
         this.direccion,
         this.idcarrito,
+        this.email,
+        this.password,
     });
 
     int id;
@@ -29,6 +31,8 @@ class Cliente {
     int telf;
     String direccion;
     int idcarrito;
+    String email;
+    String password;
 
     factory Cliente.fromJson(Map<String, dynamic> json) => Cliente(
         id: json["id"],
@@ -37,6 +41,8 @@ class Cliente {
         telf: json["telf"],
         direccion: json["direccion"],
         idcarrito: json["idcarrito"],
+        email: json["email"],
+        password: json["password"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -46,5 +52,7 @@ class Cliente {
         "telf": telf,
         "direccion": direccion,
         "idcarrito": idcarrito,
+        "email": email,
+        "password": password,
     };
 }

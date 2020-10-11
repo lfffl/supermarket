@@ -9,14 +9,14 @@ class HistorialCompras extends StatefulWidget {
 }
 
 class _HistorialComprasState extends State<HistorialCompras> {
-  DatosBasicos datosbasicos;
+  DatosBasicos2 datosbasicos = new DatosBasicos2();
   ProductoBloc pbloc = new ProductoBloc();
   List<Factura> fac = new List<Factura>();
 
   @override
   Widget build(BuildContext context) {
-    datosbasicos = ModalRoute.of(context).settings.arguments;
-    pbloc.setCarrito(datosbasicos.clienteId);
+    datosbasicos.datosBasicos = ModalRoute.of(context).settings.arguments;
+    pbloc.setCarrito(datosbasicos.datosBasicos.clienteId);
     return Scaffold(
       appBar: AppBar(
         title: Text("Tu Historial de Compras"),
@@ -54,7 +54,7 @@ class _HistorialComprasState extends State<HistorialCompras> {
 
   Widget _crearLista(List<ProductoCarrito> productos) {
     fac = _crearListaDeFacturas(productos);
-    print(fac.length);
+    //print(fac.length);
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
         return Column(
@@ -65,24 +65,18 @@ class _HistorialComprasState extends State<HistorialCompras> {
                 style: TextStyle(color: Colors.blue),
               ),
               subtitle: RichText(
-                  text: TextSpan(
-                      /* text: '${productos[index].descripcion}',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                      */
-                      children: <TextSpan>[
-                    TextSpan(
-                        text: '\nTotal: ',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.black)),
-                    TextSpan(
-                        text: '${fac[index].total} Bs',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red,
-                            fontSize: 15.0))
-                  ])),
+                  text: TextSpan(children: <TextSpan>[
+                TextSpan(
+                    text: '\nTotal: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.black)),
+                TextSpan(
+                    text: '${fac[index].total} Bs',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                        fontSize: 15.0))
+              ])),
               isThreeLine: true,
               leading: Icon(Icons.format_list_bulleted),
               trailing: IconButton(
@@ -90,7 +84,11 @@ class _HistorialComprasState extends State<HistorialCompras> {
                   Icons.arrow_forward_ios,
                   color: Colors.blueAccent,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  datosbasicos.fecha = fac[index].fecha;
+                  Navigator.pushNamed(context, 'DetalleHistorialCompras',
+                      arguments: datosbasicos);
+                },
               ),
             ),
             Divider()
@@ -102,10 +100,11 @@ class _HistorialComprasState extends State<HistorialCompras> {
   }
 
   List<Factura> _crearListaDeFacturas(List<ProductoCarrito> productos) {
+    fac.clear();
     List<String> fechas = new List<String>();
     productos.forEach((element) {
       if ((!fechas.contains(element.fecha)) && element.estado == 1) {
-        print('nueva fecha: ' + element.fecha);
+        //print('nueva fecha: ' + element.fecha);
         fechas.add(element.fecha);
       }
     });
@@ -129,4 +128,9 @@ class _HistorialComprasState extends State<HistorialCompras> {
 class Factura {
   String fecha;
   double total = 0;
+}
+
+class DatosBasicos2 {
+  DatosBasicos datosBasicos;
+  String fecha;
 }

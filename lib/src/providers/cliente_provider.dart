@@ -33,6 +33,12 @@ class ClienteProvider {
     return res.isNotEmpty ? Cliente.fromJson(res.first) : null;
   }
 
+  Future<Cliente> getClienteEmail(String email) async {
+    db = await DBProvider.db.database;
+    final res = await db.query('cliente', where: 'email=?', whereArgs: [email]);
+    return res.isNotEmpty ? Cliente.fromJson(res.first) : null;
+  }
+
   Future<List<Cliente>> getAll() async {
     db = await DBProvider.db.database;
     final res = await db.query('cliente');

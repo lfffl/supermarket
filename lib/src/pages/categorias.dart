@@ -21,18 +21,20 @@ class _ComprasState extends State<CategoriasPage> {
 
   String resultText = "";
 
+  DatosBasicos datosbasicos;
+  MenuP p;
+
   @override
   void initState() {
     super.initState();
     initSpeechRecognizer();
   }
 
-  DatosBasicos datosbasicos;
-  MenuP p = new MenuP();
   @override
   Widget build(BuildContext context) {
     datosbasicos = ModalRoute.of(context).settings.arguments;
-    p.setDatosbasicos(datosbasicos);
+    p = new MenuP(datosbasicos);
+    //p.setDatosbasicos(datosbasicos);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurpleAccent,
@@ -150,13 +152,6 @@ class _ComprasState extends State<CategoriasPage> {
     );
   }
 
-  // Text(categorias[index].nombre,
-  //                 style: TextStyle(
-  //                   fontSize: 25.0,color: Colors.white,
-  //                   // background: Paint()..color = Colors.white,
-  //                 ),
-  //                 overflow: TextOverflow.ellipsis)
-
   Widget _cargarlista2() {
     final CategoriaProvider ct = new CategoriaProvider();
     // List<Categoria> categorias = await ct.getAll();
@@ -171,22 +166,6 @@ class _ComprasState extends State<CategoriasPage> {
       },
     );
   }
-
-  // ListTile(
-  //   title: Text(
-  //     '${categorias[index].nombre}',
-  //     style: TextStyle(color: Colors.blue),
-  //   ),
-  //   subtitle: Text('${categorias[index].descripcion}'),
-  //   trailing: Icon(
-  //     Icons.arrow_forward,
-  //     color: Colors.deepPurpleAccent,
-  //   ),
-  //   onTap: () {
-  //     datosbasicos.categoriaId = categorias[index].id;
-  //     Navigator.pushNamed(context, 'listaproductos', arguments: datosbasicos);
-  //   },
-  // ),
 
   void initSpeechRecognizer() {
     _speechRecognition = SpeechRecognition();

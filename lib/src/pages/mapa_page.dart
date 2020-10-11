@@ -17,6 +17,7 @@ class MapaPage extends StatefulWidget {
 
 class MapaPageState extends State<MapaPage> {
   Completer<GoogleMapController> _controller = Completer();
+  MenuP menup;
   double zoom = 14.4746;
   Set<Marker> _markers = Set();
   List<Supermercado> listaSuper = [];
@@ -48,6 +49,7 @@ class MapaPageState extends State<MapaPage> {
   @override
   Widget build(BuildContext context) {
     datosbasicos = ModalRoute.of(context).settings.arguments;
+    menup = new MenuP(datosbasicos);
     return WillPopScope(
       onWillPop: () async => showDialog(
           context: context,
@@ -96,7 +98,7 @@ class MapaPageState extends State<MapaPage> {
           ),
         ),
         //drawer: _getdrawer(context),
-        drawer: MenuP(),
+        drawer: menup,
       ),
     );
   }

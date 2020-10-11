@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supermarket/src/pages/detalle_historial_compra.dart';
 import 'package:supermarket/src/pages/historias_compras.dart';
 
 import 'package:supermarket/src/pages/mapa_page.dart';
@@ -36,7 +37,8 @@ class MyApp extends StatelessWidget {
         'catergorias' : (BuildContext context)=>CategoriasPage(),
         'carrito' : (BuildContext context)=> CarritoPage(),
         'listaproductos':(BuildContext context)=> ListaProductosPage(),
-        'HistorialCompras':(BuildContext context)=> HistorialCompras() 
+        'HistorialCompras':(BuildContext context)=> HistorialCompras(),
+        'DetalleHistorialCompras':(BuildContext context)=> DetalleHistoriaCompra()
 
       },
     );
